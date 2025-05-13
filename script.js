@@ -27,6 +27,18 @@ app.post("/logs", (req, res) => {
   });
 });
 
+app.get("/logs/:id", (req, res) => {
+  const { id } = req.params;
+
+  fs.readFile("logs.txt", "utf-8", (err, data) => {
+    if (err) return res.status(400).json({ erro: err });
+    const linhas = data.split("\n");
+    const linhaId = linhas.find(linha => linha.startsWith(id))
+    if(linhaId) return res.status(200).json({log: linhaId})
+        else return res.status(400).json({erro: "Id não encontrado"})
+  });
+});
+
 app.listen(3000, () => {
   console.log("Aberto em http://localhost:3000");
 });
